@@ -28,10 +28,14 @@ pkg-info:
 submodule:
 	git submodule update --init
 
+ifeq ($(EMACS),emacs24)
+ert-compile: # do nothing: ert is included in emacs24
+else
 ERT_DIR = lib/ert/lisp/emacs-lisp
 ert-compile: submodule ert-clean log
 	$(EMACS) -Q -batch -L $(ERT_DIR) \
 		-f batch-byte-compile $(ERT_DIR)/*.el 2> log/ert-compile.log
+endif
 
 ert-clean:
 	rm -f lib/ert/lisp/emacs-lisp/*.elc
